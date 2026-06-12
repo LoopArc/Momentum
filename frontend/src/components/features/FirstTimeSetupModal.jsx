@@ -101,8 +101,8 @@ const FirstTimeSetupModal = () => {
   };
 
   return (
-    <div className="fixed inset-0 bg-bg-color/80 backdrop-blur-sm z-50 flex justify-center items-center p-4">
-      <div className="bg-surface p-6 sm:p-8 rounded-2xl w-full max-w-2xl border border-border-default text-left animate-fade-in-up shadow-xl">
+    <div className="fixed inset-0 bg-bg-color/60 backdrop-blur-md z-50 flex justify-center items-center p-4">
+      <div className="bg-gray-900/80 backdrop-blur-xl p-6 sm:p-8 rounded-2xl w-full max-w-2xl border border-white/10 text-left animate-fade-in-up shadow-xl max-h-[calc(100vh-2rem)] overflow-y-auto">
         <div className="flex items-center gap-3 mb-4">
           <MomentumLogo className="text-accent h-6 w-6" />
           <h1 className="text-primary-text text-xl font-semibold">

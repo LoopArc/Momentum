@@ -15,6 +15,8 @@ import { useTour } from '../context/TourContext';
 import FirstTimeSetupModal from './features/FirstTimeSetupModal';
 import { getTodaysRoutines, updateStreak } from '../utils/routineManager';
 import toast from 'react-hot-toast'; // --- 1. Import toast
+import { motion, AnimatePresence } from 'framer-motion';
+import BottomNav from './ui/BottomNav';
 
 // A helper hook to get the previous value of a state or prop
 const usePrevious = (value) => {
@@ -30,6 +32,9 @@ const Dashboard = () => {
   const [celebrationTrigger, setCelebrationTrigger] = useState(null);
   const { userData, loading, isFirstLogin } = useUser(); // Assuming useUser provides userData
   const { setRunTour } = useTour();
+  
+  const [mobileTab, setMobileTab] = useState('home');
+  const [isDesktop, setIsDesktop] = useState(true);
 
   const celebrationQuotes = [
     "Boom! Routine complete. You're unstoppable. 🚀",
@@ -40,6 +45,17 @@ const Dashboard = () => {
   ];
   // Track the previous value of isFirstLogin
   const prevIsFirstLogin = usePrevious(isFirstLogin);
+
+  useEffect(() => {
+    const media = window.matchMedia('(min-width: 768px)');
+    const listener = () => setIsDesktop(media.matches);
+    
+    // Set initial state
+    setIsDesktop(media.matches);
+    
+    media.addEventListener('change', listener);
+    return () => media.removeEventListener('change', listener);
+  }, []);
 
   useEffect(() => {
     // Check if the user has just finished the setup modal
@@ -104,46 +120,108 @@ const Dashboard = () => {
     // Update the ref for the next comparison
     prevUserData.current = userData;
   }, [userData, loading]);
+
   return (
-    <div className="max-w-screen-xl mx-auto p-4 sm:p-8">
+    <div className="max-w-screen-xl mx-auto p-4 sm:p-8 pb-24 md:pb-8">
       {/* This now works as originally intended */}
       {isFirstLogin && <FirstTimeSetupModal />}
 
       <Header />
-      <main className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-8 items-start">
-        <div className="flex flex-col gap-8">
-          <div id="tour-step-1-logging-focus">
-            {loading ? <Skeleton height={120} /> : <DailyTracker />}
-          </div>
-          <div id="tour-step-4-activity-chart">
-            {loading ? <Skeleton height={200} /> : <ActivityChart />}
-          </div>
-          <div id="tour-step-2-managing-areas" ref={categoryManagerRef}>
-            {loading ? <Skeleton height={180} /> : <CategoryManager />}
-          </div>
-        </div>
-        <div className="flex flex-col gap-8">
-          {loading ? (
-            <Skeleton height={150} />
-          ) : (
-            <div id="tour-step-routines-card">
-              <TodaysRoutinesCard
-                categoryManagerRef={categoryManagerRef}
-                celebrationTrigger={celebrationTrigger}
-              />
+
+      {isDesktop ? (
+        <main className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-8 items-start">
+          <div className="flex flex-col gap-8">
+            <div id="tour-step-1-logging-focus">
+              {loading ? <Skeleton height={120} /> : <DailyTracker />}
             </div>
-          )}
-          <div id="tour-step-5-focus-timer">
-            {loading ? <Skeleton height={180} /> : <FocusSession />}
+            <div id="tour-step-4-activity-chart">
+              {loading ? <Skeleton height={200} /> : <ActivityChart />}
+            </div>
+            <div id="tour-step-2-managing-areas" ref={categoryManagerRef}>
+              {loading ? <Skeleton height={180} /> : <CategoryManager />}
+            </div>
           </div>
-          <div id="tour-step-3-grand-tally">
-            {loading ? <Skeleton height={180} /> : <StatsOverview />}
+          <div className="flex flex-col gap-8">
+            {loading ? (
+              <Skeleton height={150} />
+            ) : (
+              <div id="tour-step-routines-card">
+                <TodaysRoutinesCard
+                  categoryManagerRef={categoryManagerRef}
+                  celebrationTrigger={celebrationTrigger}
+                />
+              </div>
+            )}
+            <div id="tour-step-5-focus-timer">
+              {loading ? <Skeleton height={180} /> : <FocusSession />}
+            </div>
+            <div id="tour-step-3-grand-tally">
+              {loading ? <Skeleton height={180} /> : <StatsOverview />}
+            </div>
+            {loading ? <Skeleton height={150} /> : <History />}
           </div>
-          {loading ? <Skeleton height={150} /> : <History />}
-        </div>
-      </main>
+        </main>
+      ) : (
+        <main>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={mobileTab}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="flex flex-col gap-6"
+            >
+              {mobileTab === 'home' && (
+                <>
+                  <div id="tour-step-1-logging-focus">
+                    {loading ? <Skeleton height={120} /> : <DailyTracker />}
+                  </div>
+                  {loading ? (
+                    <Skeleton height={150} />
+                  ) : (
+                    <div id="tour-step-routines-card">
+                      <TodaysRoutinesCard
+                        categoryManagerRef={categoryManagerRef}
+                        celebrationTrigger={celebrationTrigger}
+                      />
+                    </div>
+                  )}
+                </>
+              )}
+
+              {mobileTab === 'timer' && (
+                <div id="tour-step-5-focus-timer">
+                  {loading ? <Skeleton height={180} /> : <FocusSession />}
+                </div>
+              )}
+
+              {mobileTab === 'stats' && (
+                <>
+                  <div id="tour-step-4-activity-chart">
+                    {loading ? <Skeleton height={200} /> : <ActivityChart />}
+                  </div>
+                  <div id="tour-step-3-grand-tally">
+                    {loading ? <Skeleton height={180} /> : <StatsOverview />}
+                  </div>
+                  {loading ? <Skeleton height={150} /> : <History />}
+                </>
+              )}
+
+              {mobileTab === 'settings' && (
+                <div id="tour-step-2-managing-areas" ref={categoryManagerRef}>
+                  {loading ? <Skeleton height={180} /> : <CategoryManager />}
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </main>
+      )}
+
+      <BottomNav activeTab={mobileTab} onTabChange={setMobileTab} />
     </div>
   );
 };
 
 export default Dashboard;
+
