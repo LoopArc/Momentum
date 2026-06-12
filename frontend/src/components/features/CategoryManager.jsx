@@ -95,7 +95,7 @@ const CategoryManager = () => {
       headerAction={EditButton}
     >
       <div
-        className="flex flex-col gap-1.5 mb-4 max-h-[40vh] overflow-y-auto hide-scrollbar pr-0.5"
+        className="flex flex-col gap-1.5 mb-4 max-h-none md:max-h-[50vh] overflow-y-auto hide-scrollbar pr-0.5"
         onDragOver={(e) => e.preventDefault()}
       >
         <AnimatePresence>

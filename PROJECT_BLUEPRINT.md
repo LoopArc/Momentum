@@ -30,7 +30,7 @@ Momentum is a productivity web application built with React, Tailwind CSS, and F
 
 ---
 
-## Architectural Modifications (Version 1.2.0)
+## Architectural Modifications (Version 1.3.0)
 
 ### 1. Zero Scroll Architecture (Mobile-first)
 - Swapped viewport layouts on mobile to lock the root container size (`h-[100dvh] overflow-hidden`) and scroll content inner-containers independently.
@@ -39,6 +39,7 @@ Momentum is a productivity web application built with React, Tailwind CSS, and F
 ### 2. Segmented Mobile Sub-Navigation
 - Inlined toggle views inside `Dashboard.jsx`'s stats tab to prevent vertical stacked overflows.
 
-### 3. Responsive Color Picker Bottom Sheet
-- Re-architected `ColorPicker.jsx` using `matchMedia` state tracking.
-- Renders custom sliding overlay backdrops and spring-animated panel drawers from the bottom edge on mobile, while preserving absolute tooltip placement on desktop.
+### 3. Native Bottom Sheet Modals & Liquid Glass
+- Refactored `Modal.jsx`, `FirstTimeSetupModal.jsx`, `EditAttemptModal.jsx`, `EditDayModal.jsx`, and `WelcomeTourModal.jsx` to function as animated Framer Motion Bottom Sheets on mobile (`y: 100% -> 0`), while preserving desktop centering using `md:` prefixes.
+- Applied consistent "Liquid Glass" overlays (`bg-gray-900/80 backdrop-blur-2xl border-white/10`) across all popovers and modals.
+- Enhanced form touch targets (inputs, days toggles, swatches) to a minimum of `44x44px` for improved mobile accessibility.

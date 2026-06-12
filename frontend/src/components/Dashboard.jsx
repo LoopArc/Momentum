@@ -34,6 +34,7 @@ const Dashboard = () => {
   const { setRunTour } = useTour();
   
   const [mobileTab, setMobileTab] = useState('home');
+  const [homeSubTab, setHomeSubTab] = useState('mission');
   const [statsSubTab, setStatsSubTab] = useState('overview');
   const [isDesktop, setIsDesktop] = useState(true);
 
@@ -127,10 +128,10 @@ const Dashboard = () => {
       {/* This now works as originally intended */}
       {isFirstLogin && <FirstTimeSetupModal />}
 
-      <Header />
-
       {isDesktop ? (
-        <main className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-8 items-start">
+        <>
+          <Header />
+          <main className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-8 items-start">
           <div className="flex flex-col gap-8">
             <div id="tour-step-1-logging-focus">
               {loading ? <Skeleton height={120} /> : <DailyTracker />}
@@ -161,9 +162,13 @@ const Dashboard = () => {
             </div>
             {loading ? <Skeleton height={150} /> : <History />}
           </div>
-        </main>
+          </main>
+        </>
       ) : (
-        <main className="flex-1 overflow-y-auto min-h-0 hide-scrollbar pb-24">
+        <main className="flex-1 overflow-y-auto min-h-0 hide-scrollbar relative">
+          <div className="md:hidden pb-2">
+            <Header />
+          </div>
           <AnimatePresence mode="wait">
             <motion.div
               key={mobileTab}
@@ -171,34 +176,78 @@ const Dashboard = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="flex flex-col gap-5 h-full"
+              className="flex flex-col gap-5 min-h-full"
             >
               {mobileTab === 'home' && (
-                <>
-                  <div id="tour-step-1-logging-focus">
-                    {loading ? <Skeleton height={120} /> : <DailyTracker />}
+                <div className="flex flex-col gap-4">
+                  <div className="flex bg-white/5 p-1 rounded-xl border border-white/10 w-full flex-shrink-0">
+                    <button
+                      onClick={() => setHomeSubTab('mission')}
+                      className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all cursor-pointer ${
+                        homeSubTab === 'mission'
+                          ? 'bg-accent text-bg-color font-bold'
+                          : 'text-secondary-text hover:text-primary-text'
+                      }`}
+                    >
+                      Mission
+                    </button>
+                    <button
+                      onClick={() => setHomeSubTab('routines')}
+                      className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all cursor-pointer ${
+                        homeSubTab === 'routines'
+                          ? 'bg-accent text-bg-color font-bold'
+                          : 'text-secondary-text hover:text-primary-text'
+                      }`}
+                    >
+                      Routines
+                    </button>
                   </div>
-                  {loading ? (
-                    <Skeleton height={150} />
-                  ) : (
-                    <div id="tour-step-routines-card">
-                      <TodaysRoutinesCard
-                        categoryManagerRef={categoryManagerRef}
-                        celebrationTrigger={celebrationTrigger}
-                      />
-                    </div>
-                  )}
-                </>
+
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={homeSubTab}
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -5 }}
+                      transition={{ duration: 0.15 }}
+                      className="flex flex-col gap-4"
+                    >
+                      {homeSubTab === 'mission' ? (
+                        <div className="flex flex-col">
+                          <div id="tour-step-1-logging-focus">
+                            {loading ? <Skeleton height={120} /> : <DailyTracker />}
+                          </div>
+                          <div className="h-24 flex-shrink-0 w-full" />
+                        </div>
+                      ) : (
+                        <div className="flex flex-col">
+                          {loading ? (
+                            <Skeleton height={150} />
+                          ) : (
+                            <div id="tour-step-routines-card">
+                              <TodaysRoutinesCard
+                                categoryManagerRef={categoryManagerRef}
+                                celebrationTrigger={celebrationTrigger}
+                              />
+                            </div>
+                          )}
+                          <div className="h-24 flex-shrink-0 w-full" />
+                        </div>
+                      )}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
               )}
 
               {mobileTab === 'timer' && (
-                <div id="tour-step-5-focus-timer" className="h-full">
+                <div id="tour-step-5-focus-timer" className="flex flex-col">
                   {loading ? <Skeleton height={180} /> : <FocusSession />}
+                  <div className="h-24 flex-shrink-0 w-full" />
                 </div>
               )}
 
               {mobileTab === 'stats' && (
-                <div className="flex flex-col gap-4 h-full">
+                <div className="flex flex-col gap-4">
                   {/* Segmented Control Sub-Nav */}
                   <div className="flex bg-white/5 p-1 rounded-xl border border-white/10 w-full flex-shrink-0">
                     <button
@@ -230,7 +279,7 @@ const Dashboard = () => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -5 }}
                       transition={{ duration: 0.15 }}
-                      className="flex-1 flex flex-col gap-4 overflow-y-auto min-h-0 pb-6 hide-scrollbar"
+                      className="flex flex-col gap-4"
                     >
                       {statsSubTab === 'overview' ? (
                         <>
@@ -240,10 +289,12 @@ const Dashboard = () => {
                           <div id="tour-step-3-grand-tally">
                             {loading ? <Skeleton height={180} /> : <StatsOverview />}
                           </div>
+                          <div className="h-24 flex-shrink-0 w-full" />
                         </>
                       ) : (
-                        <div className="flex-1 overflow-y-auto min-h-0 hide-scrollbar pb-6">
+                        <div className="flex flex-col">
                           {loading ? <Skeleton height={150} /> : <History />}
+                          <div className="h-24 flex-shrink-0 w-full" />
                         </div>
                       )}
                     </motion.div>
@@ -252,8 +303,11 @@ const Dashboard = () => {
               )}
 
               {mobileTab === 'settings' && (
-                <div id="tour-step-2-managing-areas" ref={categoryManagerRef}>
-                  {loading ? <Skeleton height={180} /> : <CategoryManager />}
+                <div className="flex flex-col">
+                  <div id="tour-step-2-managing-areas" ref={categoryManagerRef}>
+                    {loading ? <Skeleton height={180} /> : <CategoryManager />}
+                  </div>
+                  <div className="h-24 flex-shrink-0 w-full mt-auto" />
                 </div>
               )}
             </motion.div>

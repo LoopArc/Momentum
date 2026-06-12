@@ -42,7 +42,7 @@ const RoutineCreator = ({ category, onRoutineChange, onRemove, close }) => {
   };
 
   return (
-    <div className="p-4 w-64">
+    <div className="p-4 w-full md:w-72 mx-auto">
       <header className="mb-4">
         <h3 className="font-bold text-primary-text">
           Routine for '{category.label}'
@@ -58,11 +58,11 @@ const RoutineCreator = ({ category, onRoutineChange, onRemove, close }) => {
         </label>
         <button
           onClick={handleToggleEnable}
-          className={`transition-colors ${
+          className={`transition-colors min-h-[44px] flex items-center ${
             isEnabled ? 'text-accent' : 'text-secondary-text'
           }`}
         >
-          {isEnabled ? <ToggleRight size={24} /> : <ToggleLeft size={24} />}
+          {isEnabled ? <ToggleRight size={32} /> : <ToggleLeft size={32} />}
         </button>
       </div>
 
@@ -71,12 +71,12 @@ const RoutineCreator = ({ category, onRoutineChange, onRemove, close }) => {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
         >
-          <div className="mt-4 pt-4 border-t border-white/10">
+          <div className="mt-2 pt-4 border-t border-white/10">
             <p className="text-xs text-secondary-text mb-2">Frequency</p>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => handleTypeChange('daily')}
-                className={`flex-1 px-3 py-1 text-sm rounded-md transition-colors ${
+                className={`flex-1 px-3 py-2 text-sm rounded-md transition-colors min-h-[44px] ${
                   type === 'daily' ? 'bg-accent text-bg-color' : 'bg-white/10'
                 }`}
               >
@@ -84,7 +84,7 @@ const RoutineCreator = ({ category, onRoutineChange, onRemove, close }) => {
               </button>
               <button
                 onClick={() => handleTypeChange('weekly')}
-                className={`flex-1 px-3 py-1 text-sm rounded-md transition-colors ${
+                className={`flex-1 px-3 py-2 text-sm rounded-md transition-colors min-h-[44px] ${
                   type === 'weekly' ? 'bg-accent text-bg-color' : 'bg-white/10'
                 }`}
               >
@@ -92,12 +92,12 @@ const RoutineCreator = ({ category, onRoutineChange, onRemove, close }) => {
               </button>
             </div>
             {type === 'weekly' && (
-              <div className="flex items-center justify-between gap-1 mt-3">
+              <div className="flex items-center justify-between gap-1 mt-4">
                 {daysOfWeek.map((day, index) => (
                   <button
                     key={index}
                     onClick={() => handleDayToggle(index)}
-                    className={`w-8 h-8 rounded-full text-xs font-bold transition-colors ${
+                    className={`w-10 h-10 md:w-8 md:h-8 rounded-full text-xs font-bold transition-colors flex items-center justify-center ${
                       selectedDays.includes(index)
                         ? 'bg-accent text-bg-color'
                         : 'bg-white/10 hover:bg-white/20'
@@ -113,7 +113,7 @@ const RoutineCreator = ({ category, onRoutineChange, onRemove, close }) => {
       )}
       <button
         onClick={close}
-        className="w-full mt-4 bg-accent text-bg-color font-medium py-2 rounded-lg text-sm transition-colors hover:bg-button-hover"
+        className="w-full mt-6 bg-accent text-bg-color font-medium py-2 rounded-lg text-sm transition-colors hover:bg-button-hover min-h-[44px]"
       >
         Done
       </button>
@@ -122,3 +122,4 @@ const RoutineCreator = ({ category, onRoutineChange, onRemove, close }) => {
 };
 
 export default RoutineCreator;
+

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useUser } from '../../context/UserProvider';
 import MomentumLogo from '../ui/MomentumLogo';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Code2,
   BookOpen,
@@ -71,6 +72,14 @@ const TEMPLATES = {
 const FirstTimeSetupModal = () => {
   const { userData, saveData, completeOnboarding } = useUser();
   const [selectedTemplates, setSelectedTemplates] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const toggleTemplate = (templateName) => {
     setSelectedTemplates((prev) =>
@@ -101,65 +110,83 @@ const FirstTimeSetupModal = () => {
   };
 
   return (
-    <div className="fixed inset-0 bg-bg-color/60 backdrop-blur-md z-50 flex justify-center items-center p-4">
-      <div className="bg-gray-900/80 backdrop-blur-xl p-6 sm:p-8 rounded-2xl w-full max-w-2xl border border-white/10 text-left animate-fade-in-up shadow-xl max-h-[calc(100vh-2rem)] overflow-y-auto">
-        <div className="flex items-center gap-3 mb-4">
-          <MomentumLogo className="text-accent h-6 w-6" />
-          <h1 className="text-primary-text text-xl font-semibold">
-            Choose your role
-          </h1>
-        </div>
-        <p className="text-secondary-text text-sm mb-6">
-          Pick one or more roles to pre-fill your focus areas.
-        </p>
+    <AnimatePresence>
+      <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center pointer-events-none p-0 md:p-4">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-bg-color/80 backdrop-blur-2xl pointer-events-auto"
+        />
+        <motion.div
+          initial={isMobile ? { y: '100%' } : { y: -50, opacity: 0, scale: 0.95 }}
+          animate={isMobile ? { y: 0 } : { y: 0, opacity: 1, scale: 1 }}
+          exit={isMobile ? { y: '100%' } : { y: 50, opacity: 0, scale: 0.95 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          className="w-full bg-surface/80 backdrop-blur-xl border-t border-white/10 rounded-t-2xl shadow-2xl pointer-events-auto relative z-10 p-6 md:p-8 md:max-w-2xl md:rounded-2xl md:border md:shadow-xl text-left max-h-[85vh] overflow-y-auto hide-scrollbar pb-safe"
+        >
+          {isMobile && (
+            <div className="w-12 h-1.5 bg-white/20 rounded-full mx-auto mb-6 mt-[-10px]" />
+          )}
+          <div className="flex items-center gap-3 mb-4">
+            <MomentumLogo className="text-accent h-6 w-6" />
+            <h1 className="text-primary-text text-xl font-semibold">
+              Choose your role
+            </h1>
+          </div>
+          <p className="text-secondary-text text-sm mb-6">
+            Pick one or more roles to pre-fill your focus areas.
+          </p>
 
-        {/* Mosaic-style selection */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-          {Object.entries(TEMPLATES).map(([name, { icon, description }]) => {
-            const isSelected = selectedTemplates.includes(name);
-            return (
-              <button
-                key={name}
-                onClick={() => toggleTemplate(name)}
-                className={`flex flex-col items-start gap-2 p-4 rounded-xl border transition-all duration-200 group hover:scale-[1.015]
-              ${
-                isSelected
-                  ? 'bg-accent/10 border-accent'
-                  : 'bg-input-bg border-border-default hover:border-gray-500'
-              }`}
-              >
-                <div className="flex items-center gap-2">
-                  {icon}
-                  <span className="text-primary-text font-medium">{name}</span>
-                  {isSelected && (
-                    <CheckCircle2 className="w-5 h-5 text-accent ml-auto" />
-                  )}
-                </div>
-                <p className="text-sm text-secondary-text">{description}</p>
-              </button>
-            );
-          })}
-        </div>
+          {/* Mosaic-style selection */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            {Object.entries(TEMPLATES).map(([name, { icon, description }]) => {
+              const isSelected = selectedTemplates.includes(name);
+              return (
+                <button
+                  key={name}
+                  onClick={() => toggleTemplate(name)}
+                  className={`flex flex-col items-start gap-2 p-4 rounded-xl border transition-all duration-200 group hover:scale-[1.015] min-h-[80px]
+                ${
+                  isSelected
+                    ? 'bg-accent/10 border-accent'
+                    : 'bg-input-bg border-border-default hover:border-gray-500'
+                }`}
+                >
+                  <div className="flex items-center gap-2 w-full">
+                    {icon}
+                    <span className="text-primary-text font-medium">{name}</span>
+                    {isSelected && (
+                      <CheckCircle2 className="w-5 h-5 text-accent ml-auto" />
+                    )}
+                  </div>
+                  <p className="text-sm text-secondary-text text-left">{description}</p>
+                </button>
+              );
+            })}
+          </div>
 
-        <div className="flex flex-col items-center gap-3">
-          <button
-            onClick={handleFinishSetup}
-            className="w-full py-3 rounded-lg font-medium text-base cursor-pointer transition-colors bg-accent text-bg-color hover:bg-button-hover"
-          >
-            {selectedTemplates.length > 0
-              ? `Continue with ${selectedTemplates.length} role(s)`
-              : 'Continue'}
-          </button>
-          <button
-            onClick={handleFinishSetup}
-            className="text-secondary-text hover:text-primary-text text-sm font-medium transition-colors"
-          >
-            I'll start from scratch
-          </button>
-        </div>
+          <div className="flex flex-col items-center gap-3">
+            <button
+              onClick={handleFinishSetup}
+              className="w-full py-3 rounded-lg font-medium text-base cursor-pointer transition-colors bg-accent text-bg-color hover:bg-button-hover min-h-[44px]"
+            >
+              {selectedTemplates.length > 0
+                ? `Continue with ${selectedTemplates.length} role(s)`
+                : 'Continue'}
+            </button>
+            <button
+              onClick={handleFinishSetup}
+              className="text-secondary-text hover:text-primary-text text-sm font-medium transition-colors min-h-[44px] flex items-center"
+            >
+              I'll start from scratch
+            </button>
+          </div>
+        </motion.div>
       </div>
-    </div>
+    </AnimatePresence>
   );
 };
 
 export default FirstTimeSetupModal;
+

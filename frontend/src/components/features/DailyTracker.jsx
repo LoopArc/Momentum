@@ -131,7 +131,7 @@ const DailyTracker = () => {
         description="Select a focus area below each time you complete a task to add it to your daily log. Add a block of pure, uninterrupted focus."
         headerAction={AddButton}
       >
-        <div className="flex flex-row overflow-x-auto snap-x snap-mandatory gap-3 py-2 mb-6 hide-scrollbar md:flex-wrap md:overflow-visible md:snap-none md:py-0 md:pb-0">
+        <div className="flex flex-wrap gap-3 py-2 mb-6 hide-scrollbar md:py-0 md:pb-0">
           {(userData?.settings?.categories || []).map((cat) => {
             const isPendingRoutine = pendingRoutineIds.includes(cat.id);
             return (
@@ -142,7 +142,7 @@ const DailyTracker = () => {
                   backgroundColor: cat.color,
                   color: getTextColorForBg(cat.color),
                 }}
-                className={`relative border-none px-5 py-3 rounded-md text-sm font-medium cursor-pointer shadow-sm min-h-[44px] flex-shrink-0 snap-start md:shrink md:snap-none flex items-center justify-center ${
+                className={`relative border-none px-5 py-3 rounded-md text-sm font-medium cursor-pointer shadow-sm min-h-[44px] shrink flex items-center justify-center ${
                   isPendingRoutine
                     ? 'ring-2 ring-offset-2 ring-offset-surface ring-accent'
                     : ''

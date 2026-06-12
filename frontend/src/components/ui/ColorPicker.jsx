@@ -47,7 +47,7 @@ const ColorPicker = ({ selectedColor, onColorChange, disabled }) => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/60 z-50"
+                className="fixed inset-0 bg-bg-color/80 backdrop-blur-2xl z-[100]"
                 onClick={() => setIsOpen(false)}
               />
             )}
@@ -58,21 +58,21 @@ const ColorPicker = ({ selectedColor, onColorChange, disabled }) => {
               animate={isMobile ? { y: 0 } : { y: 0, opacity: 1 }}
               exit={isMobile ? { y: '100%' } : { y: 10, opacity: 0 }}
               transition={{ type: 'spring', damping: 25, stiffness: 250 }}
-              className="fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-xl border-t border-white/10 rounded-t-2xl p-6 shadow-2xl z-50 md:absolute md:bottom-auto md:top-[120%] md:left-1/2 md:-translate-x-1/2 md:bg-input-bg md:border md:border-border-default md:rounded-xl md:p-2.5 md:w-max md:shadow-[0_5px_15px_rgba(0,0,0,0.4)]"
+              className="fixed bottom-0 left-0 right-0 bg-surface/80 backdrop-blur-xl border-t border-white/10 rounded-t-2xl p-4 md:p-6 shadow-2xl z-[105] md:absolute md:bottom-auto md:top-[120%] md:left-1/2 md:-translate-x-1/2 md:bg-input-bg md:border md:border-border-default md:rounded-xl md:w-max md:shadow-[0_5px_15px_rgba(0,0,0,0.4)] pb-safe"
             >
               {isMobile && (
-                <div className="w-12 h-1 bg-white/20 rounded-full mx-auto mb-4" />
+                <div className="w-12 h-1.5 bg-white/20 rounded-full mx-auto mb-4 mt-[-4px]" />
               )}
               {Object.entries(COLOR_PALETTE).map(([name, colors]) => (
                 <div key={name} className="p-1">
                   <p className="text-xs text-secondary-text mb-3 text-left">
                     {name}
                   </p>
-                  <div className="grid grid-cols-7 gap-3 md:gap-2">
+                  <div className="grid grid-cols-7 gap-1.5 md:gap-2 justify-items-center">
                     {colors.map((color) => (
                       <div
                         key={color}
-                        className="w-9 h-9 md:w-[22px] md:h-[22px] rounded-full cursor-pointer transition-transform hover:scale-110 hover:ring-2 hover:ring-white"
+                        className="w-11 h-11 md:w-[22px] md:h-[22px] rounded-full cursor-pointer transition-transform hover:scale-110 hover:ring-2 hover:ring-white flex-shrink-0"
                         style={{ backgroundColor: color }}
                         onClick={() => {
                           onColorChange(color);
@@ -92,3 +92,4 @@ const ColorPicker = ({ selectedColor, onColorChange, disabled }) => {
 };
 
 export default ColorPicker;
+

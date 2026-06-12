@@ -63,7 +63,7 @@ const AddCategoryForm = ({ onCategoryAdded }) => {
       className="flex flex-col gap-4 p-3 border border-dashed border-border-default rounded-lg mt-4"
     >
       {/* Primary Action Row */}
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap sm:flex-nowrap items-center gap-3">
         <ColorPicker selectedColor={newColor} onColorChange={setNewColor} />
         <input
           type="text"
@@ -71,11 +71,11 @@ const AddCategoryForm = ({ onCategoryAdded }) => {
           onChange={(e) => setNewLabel(e.target.value)}
           placeholder="New focus area name..."
           required
-          className="flex-grow bg-transparent border-none text-base focus:outline-none p-1 text-primary-text"
+          className="flex-grow bg-transparent border-none text-base focus:outline-none p-2 text-primary-text min-h-[44px]"
         />
         <button
           type="submit"
-          className="px-4 py-2 font-medium rounded-md transition-colors bg-accent text-bg-color hover:bg-button-hover"
+          className="px-4 py-2 font-medium rounded-md transition-colors bg-accent text-bg-color hover:bg-button-hover min-h-[44px] whitespace-nowrap"
         >
           Add
         </button>
@@ -100,9 +100,9 @@ const AddCategoryForm = ({ onCategoryAdded }) => {
         <button
           type="button"
           onClick={toggleRoutine}
-          className="flex items-center gap-2 text-xs text-secondary-text hover:text-accent transition-colors self-start p-1 mt-2"
+          className="flex items-center gap-2 text-sm text-secondary-text hover:text-accent transition-colors self-start py-2 px-1 mt-2 min-h-[44px]"
         >
-          {isRoutineEnabled ? <X size={12} /> : <Plus size={12} />}
+          {isRoutineEnabled ? <X size={16} /> : <Plus size={16} />}
           {isRoutineEnabled ? 'Remove Routine' : 'Add Routine'}
         </button>
       </div>
@@ -111,3 +111,4 @@ const AddCategoryForm = ({ onCategoryAdded }) => {
 };
 
 export default AddCategoryForm;
+
