@@ -95,7 +95,7 @@ const CategoryManager = () => {
       headerAction={EditButton}
     >
       <div
-        className="flex flex-col gap-1 mb-4"
+        className="flex flex-col gap-1.5 mb-4 max-h-[40vh] overflow-y-auto hide-scrollbar pr-0.5"
         onDragOver={(e) => e.preventDefault()}
       >
         <AnimatePresence>
@@ -110,7 +110,7 @@ const CategoryManager = () => {
               onDragStart={(e) => onDragStart(e, index)}
               onDragEnd={onDragEnd}
               onDrop={(e) => onDrop(e, index)}
-              className="group flex items-center gap-3 p-2.5 rounded-lg transition-colors hover:bg-white/5"
+              className="group flex items-center gap-3 py-1.5 px-2.5 md:p-2.5 rounded-lg transition-colors hover:bg-white/5 min-h-[40px] md:min-h-[48px]"
             >
               <GripVertical
                 size={20}
@@ -138,7 +138,7 @@ const CategoryManager = () => {
                   className="flex-grow p-2 border rounded-md text-base bg-input-bg border-input-border text-primary-text"
                 />
               ) : (
-                <span className="flex-grow text-primary-text text-left">
+                <span className="flex-grow text-primary-text text-left text-sm md:text-base">
                   {cat.label}
                 </span>
               )}
@@ -147,26 +147,26 @@ const CategoryManager = () => {
                 {isEditing ? (
                   <button
                     onClick={() => handleDeleteCategory(cat.id)}
-                    className="p-1.5 rounded-full text-secondary-text hover:text-error hover:bg-error/10"
+                    className="p-2.5 rounded-full text-secondary-text hover:text-error hover:bg-error/10 min-w-[40px] min-h-[40px] flex items-center justify-center cursor-pointer"
                   >
-                    <Trash2 size={16} />
+                    <Trash2 size={18} />
                   </button>
                 ) : (
                   // --- NEW LOGIC: Calendar is always visible, "More" button appears on hover ---
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-4 md:gap-1">
                     <Popover
                       placement="left-start"
                       trigger={
                         // This button is now always visible
                         <button
                           title="Set Routine"
-                          className={`p-1.5 rounded-full transition-colors duration-200 ${
+                          className={`p-2 md:p-1.5 rounded-full transition-colors duration-200 min-w-[40px] min-h-[40px] md:min-w-0 md:min-h-0 flex items-center justify-center cursor-pointer ${
                             cat.routine
                               ? 'text-accent hover:bg-accent/20' // Active routine style
                               : 'text-secondary-text/40 hover:text-accent' // Inactive routine style
                           }`}
                         >
-                          <Calendar size={16} />
+                          <Calendar size={18} className="md:w-4 md:h-4" />
                         </button>
                       }
                       content={
@@ -182,16 +182,16 @@ const CategoryManager = () => {
                     <Popover
                       placement="left-start"
                       trigger={
-                        // This button is only visible on hover
-                        <button className="opacity-0 group-hover:opacity-100 p-1.5 rounded-full text-secondary-text/80 hover:bg-white/10 transition-opacity duration-200">
-                          <MoreVertical size={16} />
+                        // Always visible on mobile, only visible on hover for desktop
+                        <button className="opacity-100 md:opacity-0 group-hover:opacity-100 p-2 md:p-1.5 rounded-full text-secondary-text/80 hover:bg-white/10 transition-all duration-200 min-w-[40px] min-h-[40px] md:min-w-0 md:min-h-0 flex items-center justify-center cursor-pointer">
+                          <MoreVertical size={18} className="md:w-4 md:h-4" />
                         </button>
                       }
                       content={
                         <div className="bg-surface border border-border-default rounded-lg p-2 flex flex-col items-start w-32">
                           <button
                             onClick={() => handleDeleteCategory(cat.id)}
-                            className="w-full flex items-center gap-2 text-left p-2 rounded-md text-error/80 hover:bg-error/10 hover:text-error"
+                            className="w-full flex items-center gap-2 text-left p-2 rounded-md text-error/80 hover:bg-error/10 hover:text-error cursor-pointer"
                           >
                             <Trash2 size={16} /> Delete
                           </button>

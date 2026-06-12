@@ -131,7 +131,7 @@ const DailyTracker = () => {
         description="Select a focus area below each time you complete a task to add it to your daily log. Add a block of pure, uninterrupted focus."
         headerAction={AddButton}
       >
-        <div className="flex flex-wrap gap-3 mb-6">
+        <div className="flex flex-row overflow-x-auto snap-x snap-mandatory gap-3 py-2 mb-6 hide-scrollbar md:flex-wrap md:overflow-visible md:snap-none md:py-0 md:pb-0">
           {(userData?.settings?.categories || []).map((cat) => {
             const isPendingRoutine = pendingRoutineIds.includes(cat.id);
             return (
@@ -142,14 +142,13 @@ const DailyTracker = () => {
                   backgroundColor: cat.color,
                   color: getTextColorForBg(cat.color),
                 }}
-                // Add `relative` to allow absolute positioning of children
-                className={`relative border-none px-5 py-3 rounded-md text-sm font-medium cursor-pointer shadow-sm ${
+                className={`relative border-none px-5 py-3 rounded-md text-sm font-medium cursor-pointer shadow-sm min-h-[44px] flex-shrink-0 snap-start md:shrink md:snap-none flex items-center justify-center ${
                   isPendingRoutine
                     ? 'ring-2 ring-offset-2 ring-offset-surface ring-accent'
                     : ''
                 }`}
                 whileTap={{
-                  scale: 0.9,
+                  scale: 0.95,
                   transition: { type: 'spring', stiffness: 400, damping: 15 },
                 }}
                 whileHover={{ y: -2 }}
@@ -171,7 +170,7 @@ const DailyTracker = () => {
         {/* The log container now has animation controls */}
         <motion.div
           animate={logContainerControls}
-          className="flex flex-wrap gap-3 min-h-[64px] mt-6 bg-black/10 p-3 rounded-lg border border-border-default"
+          className="flex flex-wrap gap-3 min-h-[64px] mt-6 bg-white/5 backdrop-blur-xl border border-white/10 p-3 rounded-lg md:bg-black/10 md:backdrop-blur-none md:border-border-default"
         >
           <AnimatePresence>
             {todayLogEntries.map((entry) => (
@@ -184,7 +183,7 @@ const DailyTracker = () => {
                   backgroundColor: entry.color,
                   '--glow-color': entry.color,
                 }}
-                className="group relative w-[38px] h-[38px] rounded-md cursor-pointer inline-flex justify-center items-center font-bold shadow-lg shadow-black/20 hover:shadow-glow"
+                className="group relative w-11 h-11 md:w-[38px] md:h-[38px] rounded-md cursor-pointer inline-flex justify-center items-center font-bold shadow-lg shadow-black/20 hover:shadow-glow"
                 variants={itemVariants}
                 initial="hidden"
                 animate="visible"
@@ -193,6 +192,7 @@ const DailyTracker = () => {
                   scale: 1.1,
                   transition: { type: 'spring', stiffness: 300 },
                 }}
+                whileTap={{ scale: 0.95 }}
               >
                 <span
                   className="text-lg transition-opacity group-hover:opacity-0"

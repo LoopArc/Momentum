@@ -34,6 +34,7 @@ const Dashboard = () => {
   const { setRunTour } = useTour();
   
   const [mobileTab, setMobileTab] = useState('home');
+  const [statsSubTab, setStatsSubTab] = useState('overview');
   const [isDesktop, setIsDesktop] = useState(true);
 
   const celebrationQuotes = [
@@ -122,7 +123,7 @@ const Dashboard = () => {
   }, [userData, loading]);
 
   return (
-    <div className="max-w-screen-xl mx-auto p-4 sm:p-8 pb-24 md:pb-8">
+    <div className="max-w-screen-xl mx-auto p-4 sm:p-8 md:pb-8 h-[100dvh] md:h-auto overflow-hidden md:overflow-visible flex flex-col md:block">
       {/* This now works as originally intended */}
       {isFirstLogin && <FirstTimeSetupModal />}
 
@@ -162,7 +163,7 @@ const Dashboard = () => {
           </div>
         </main>
       ) : (
-        <main>
+        <main className="flex-1 overflow-y-auto min-h-0 hide-scrollbar pb-24">
           <AnimatePresence mode="wait">
             <motion.div
               key={mobileTab}
@@ -170,7 +171,7 @@ const Dashboard = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="flex flex-col gap-6"
+              className="flex flex-col gap-5 h-full"
             >
               {mobileTab === 'home' && (
                 <>
@@ -191,21 +192,63 @@ const Dashboard = () => {
               )}
 
               {mobileTab === 'timer' && (
-                <div id="tour-step-5-focus-timer">
+                <div id="tour-step-5-focus-timer" className="h-full">
                   {loading ? <Skeleton height={180} /> : <FocusSession />}
                 </div>
               )}
 
               {mobileTab === 'stats' && (
-                <>
-                  <div id="tour-step-4-activity-chart">
-                    {loading ? <Skeleton height={200} /> : <ActivityChart />}
+                <div className="flex flex-col gap-4 h-full">
+                  {/* Segmented Control Sub-Nav */}
+                  <div className="flex bg-white/5 p-1 rounded-xl border border-white/10 w-full flex-shrink-0">
+                    <button
+                      onClick={() => setStatsSubTab('overview')}
+                      className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all cursor-pointer ${
+                        statsSubTab === 'overview'
+                          ? 'bg-accent text-bg-color font-bold'
+                          : 'text-secondary-text hover:text-primary-text'
+                      }`}
+                    >
+                      Overview & Chart
+                    </button>
+                    <button
+                      onClick={() => setStatsSubTab('logbook')}
+                      className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all cursor-pointer ${
+                        statsSubTab === 'logbook'
+                          ? 'bg-accent text-bg-color font-bold'
+                          : 'text-secondary-text hover:text-primary-text'
+                      }`}
+                    >
+                      Logbook
+                    </button>
                   </div>
-                  <div id="tour-step-3-grand-tally">
-                    {loading ? <Skeleton height={180} /> : <StatsOverview />}
-                  </div>
-                  {loading ? <Skeleton height={150} /> : <History />}
-                </>
+
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={statsSubTab}
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -5 }}
+                      transition={{ duration: 0.15 }}
+                      className="flex-1 flex flex-col gap-4 overflow-y-auto min-h-0 pb-6 hide-scrollbar"
+                    >
+                      {statsSubTab === 'overview' ? (
+                        <>
+                          <div id="tour-step-4-activity-chart" className="flex-shrink-0">
+                            {loading ? <Skeleton height={200} /> : <ActivityChart />}
+                          </div>
+                          <div id="tour-step-3-grand-tally">
+                            {loading ? <Skeleton height={180} /> : <StatsOverview />}
+                          </div>
+                        </>
+                      ) : (
+                        <div className="flex-1 overflow-y-auto min-h-0 hide-scrollbar pb-6">
+                          {loading ? <Skeleton height={150} /> : <History />}
+                        </div>
+                      )}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
               )}
 
               {mobileTab === 'settings' && (

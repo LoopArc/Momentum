@@ -79,11 +79,11 @@ const ActivityChart = () => {
       description="Discover your productivity rhythm. This chart visualizes your effort and patterns over the last 7 or 30 days."
       headerAction={TimeframeToggle}
     >
-      <div style={{ width: '100%', height: 250 }}>
-        <ResponsiveContainer>
+      <div className="w-full h-64 md:h-[250px]">
+        <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={chartData}
-            margin={{ top: 5, right: 10, left: -20, bottom: 0 }}
+            margin={{ top: 10, right: 5, left: -25, bottom: 0 }}
           >
             <CartesianGrid
               strokeDasharray="3 3"

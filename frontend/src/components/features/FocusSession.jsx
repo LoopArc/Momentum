@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { RefreshCw } from 'lucide-react';
 import { useUser } from '../../context/UserProvider';
 import Card from '../ui/Card';
+import { motion } from 'framer-motion';
 
 const FocusSession = () => {
   // --- Get settings from context ---
@@ -148,65 +149,70 @@ const FocusSession = () => {
     <Card
       title="Focus Session"
       description="Enter a state of deep work. Use this timer to eliminate distractions and focus intensely."
+      className="h-full md:h-auto flex flex-col"
     >
-      <div className="relative w-48 h-48 mx-auto my-6 grid place-items-center">
-        {/* SVG and timer display elements remain the same */}
-        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 200 200">
-          <circle
-            cx="100"
-            cy="100"
-            r="90"
-            fill="none"
-            stroke="white"
-            strokeOpacity="0.1"
-            strokeWidth="8"
-          />
-        </svg>
-        <div
-          className="absolute inset-0 rounded-full"
-          style={{
-            background: `conic-gradient(#bb86fc ${angle}deg, transparent ${angle}deg)`,
-            mask: 'radial-gradient(transparent 82px, black 83px)',
-            WebkitMask: 'radial-gradient(transparent 82px, black 83px)',
-          }}
-        ></div>
-        <div className="relative z-10">
-          <span className="text-5xl font-light text-white tracking-wider">
-            {String(minutes).padStart(2, '0')}:
-            {String(seconds).padStart(2, '0')}
-          </span>
+      <div className="flex-1 flex flex-col justify-center items-center pb-10 md:pb-0 md:block">
+        <div className="relative aspect-square w-full max-w-[280px] md:w-48 md:h-48 mx-auto my-4 md:my-6 grid place-items-center">
+          {/* SVG and timer display elements remain the same */}
+          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 200 200">
+            <circle
+              cx="100"
+              cy="100"
+              r="90"
+              fill="none"
+              stroke="white"
+              strokeOpacity="0.1"
+              strokeWidth="8"
+            />
+          </svg>
+          <div
+            className="absolute inset-0 rounded-full"
+            style={{
+              background: `conic-gradient(#bb86fc ${angle}deg, transparent ${angle}deg)`,
+              mask: 'radial-gradient(circle, transparent 42%, black 42.5%)',
+              WebkitMask: 'radial-gradient(circle, transparent 42%, black 42.5%)',
+            }}
+          ></div>
+          <div className="relative z-10">
+            <span className="text-6xl md:text-5xl font-light text-white tracking-wider">
+              {String(minutes).padStart(2, '0')}:
+              {String(seconds).padStart(2, '0')}
+            </span>
+          </div>
         </div>
-      </div>
-      <div className="flex justify-center items-center gap-4 mb-8">
-        <button
-          onClick={toggleTimer}
-          className="px-8 h-12 font-medium rounded-full transition-colors bg-accent text-bg-color hover:bg-button-hover text-lg"
-        >
-          {isRunning ? 'Pause' : 'Start'}
-        </button>
-        <button
-          onClick={resetTimer}
-          className="w-12 h-12 bg-white/5 rounded-full flex justify-center items-center transition-colors hover:bg-white/10"
-        >
-          <RefreshCw size={20} className="text-secondary-text" />
-        </button>
-      </div>
-      <div className="flex justify-center items-center gap-2 mt-4 border-t border-white/5 pt-6">
-        <span className="text-sm text-secondary-text mr-2">Duration:</span>
-        {presetDurations.map((preset) => (
-          <button
-            key={preset}
-            onClick={() => handleDurationChange(preset)}
-            disabled={isRunning}
-            className={`px-4 py-1.5 text-sm rounded-full transition-colors font-medium ${
-              duration === preset
-                ? 'bg-accent text-bg-color'
-                : 'bg-white/10 text-primary-text hover:bg-white/20'
-            } ${isRunning ? 'opacity-50 cursor-not-allowed' : ''}`}
+        <div className="fixed bottom-20 left-4 right-4 bg-gray-900/80 backdrop-blur-xl border border-white/10 p-4 rounded-2xl shadow-2xl flex justify-center items-center gap-4 z-40 md:static md:bottom-auto md:left-auto md:right-auto md:bg-transparent md:border-0 md:p-0 md:shadow-none md:mb-8">
+          <motion.button
+            onClick={toggleTimer}
+            className="flex-1 md:flex-initial px-8 h-14 md:h-12 font-semibold md:font-medium rounded-full transition-colors bg-accent text-bg-color hover:bg-button-hover text-xl md:text-lg min-h-[44px] flex items-center justify-center cursor-pointer"
+            whileTap={{ scale: 0.95 }}
           >
-            {preset}
-          </button>
-        ))}
+            {isRunning ? 'Pause' : 'Start'}
+          </motion.button>
+          <motion.button
+            onClick={resetTimer}
+            className="w-14 h-14 md:w-12 md:h-12 bg-white/5 rounded-full flex justify-center items-center transition-colors hover:bg-white/10 min-h-[44px] cursor-pointer"
+            whileTap={{ scale: 0.95 }}
+          >
+            <RefreshCw size={24} className="text-secondary-text md:w-5 md:h-5" />
+          </motion.button>
+        </div>
+        <div className="flex flex-wrap justify-center items-center gap-2 mt-4 border-t border-white/5 pt-6 pb-20 md:pb-0 w-full">
+          <span className="text-sm text-secondary-text mr-2">Duration:</span>
+          {presetDurations.map((preset) => (
+            <button
+              key={preset}
+              onClick={() => handleDurationChange(preset)}
+              disabled={isRunning}
+              className={`px-4 py-2 md:py-1.5 text-base md:text-sm rounded-full transition-colors font-medium min-h-[44px] flex items-center justify-center ${
+                duration === preset
+                  ? 'bg-accent text-bg-color'
+                  : 'bg-white/10 text-primary-text hover:bg-white/20'
+              } ${isRunning ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
+              {preset}
+            </button>
+          ))}
+        </div>
       </div>
     </Card>
   );

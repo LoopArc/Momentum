@@ -44,7 +44,7 @@ const TodaysRoutinesCard = ({ categoryManagerRef, celebrationTrigger }) => {
     <Card
       title="Today's Routines"
       description="Your daily checklist for success. Complete these pre-set habits to build powerful, consistent momentum."
-      className="relative"
+      className="relative !p-3 md:!p-6"
     >
       {/* The Confetti component is now configured for a full-screen effect */}
       {isCelebrating && (
@@ -59,25 +59,26 @@ const TodaysRoutinesCard = ({ categoryManagerRef, celebrationTrigger }) => {
       )}
 
       {todaysRoutines.length === 0 ? (
-        <div className="text-center py-8 px-4">
-          <div className="flex justify-center mb-4">
-            <CalendarPlus size={40} className="text-secondary-text" />
+        <div className="text-center py-6 px-4">
+          <div className="flex justify-center mb-3">
+            <CalendarPlus size={36} className="text-secondary-text" />
           </div>
-          <h3 className="font-bold text-primary-text mb-1">
+          <h3 className="font-bold text-primary-text mb-1 text-base">
             Build Lasting Habits
           </h3>
-          <p className="text-sm text-secondary-text mb-6">
+          <p className="text-xs text-secondary-text mb-4">
             Create daily or weekly routines to stay on track with your goals.
           </p>
-          <button
+          <motion.button
             onClick={handleCreateRoutineClick}
-            className="w-full bg-accent text-bg-color font-medium py-2 rounded-lg text-sm transition-colors hover:bg-button-hover"
+            className="w-full bg-accent text-bg-color font-medium py-2.5 md:py-2 min-h-[40px] flex items-center justify-center rounded-lg text-sm transition-colors hover:bg-button-hover"
+            whileTap={{ scale: 0.95 }}
           >
             Create a Routine
-          </button>
+          </motion.button>
         </div>
       ) : (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2 max-h-[30vh] overflow-y-auto hide-scrollbar pr-0.5">
           <AnimatePresence>
             {todaysRoutines.map((routine) => (
               <motion.div
@@ -86,13 +87,13 @@ const TodaysRoutinesCard = ({ categoryManagerRef, celebrationTrigger }) => {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className={`flex items-center justify-between p-3 rounded-lg transition-all ${
+                className={`flex items-center justify-between py-2 px-3 md:p-3 min-h-[40px] md:min-h-[48px] rounded-lg transition-all ${
                   routine.status === 'completed'
                     ? 'bg-green-500/10'
                     : 'bg-white/5'
                 }`}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2.5">
                   <div
                     className="w-2 h-2 rounded-full"
                     style={{ backgroundColor: routine.color }}
@@ -100,7 +101,7 @@ const TodaysRoutinesCard = ({ categoryManagerRef, celebrationTrigger }) => {
                   <span
                     className={`text-sm ${
                       routine.status === 'completed'
-                        ? 'line-through text-secondary-text'
+                        ? 'line-through text-secondary-text/80'
                         : 'text-primary-text'
                     }`}
                   >
@@ -111,7 +112,7 @@ const TodaysRoutinesCard = ({ categoryManagerRef, celebrationTrigger }) => {
                   {routine.streak > 0 && (
                     <div title={`${routine.streak} Day Streak`}>
                       <span
-                        className={`flex items-center gap-1 font-bold ${
+                        className={`flex items-center gap-1 font-bold text-xs ${
                           routine.status === 'completed'
                             ? 'text-green-400'
                             : 'text-amber-400'
@@ -123,7 +124,7 @@ const TodaysRoutinesCard = ({ categoryManagerRef, celebrationTrigger }) => {
                   )}
                   <motion.div
                     layout
-                    className={`w-5 h-5 rounded-full flex items-center justify-center border-2 ${
+                    className={`w-6 h-6 md:w-5 md:h-5 rounded-full flex items-center justify-center border-2 ${
                       routine.status === 'completed'
                         ? 'bg-green-400 border-green-400'
                         : 'border-secondary-text'

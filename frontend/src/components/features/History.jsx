@@ -139,13 +139,13 @@ const History = () => {
             return (
               <div
                 key={date}
-                className="border-b border-input-bg last:border-b-0 py-4"
+                className="bg-white/5 border border-white/10 rounded-xl p-4 mb-4 md:bg-transparent md:border-0 md:border-b md:border-input-bg md:rounded-none md:p-0 md:py-4 md:mb-0 last:border-b-0"
               >
                 <div
-                  className="flex justify-between items-center cursor-pointer group"
+                  className="flex justify-between items-center cursor-pointer group min-h-[44px]"
                   onClick={() => setOpenEntry(isOpen ? null : date)}
                 >
-                  <span className="font-medium group-hover:text-accent transition-colors text-sm">
+                  <span className="font-semibold md:font-medium group-hover:text-accent transition-colors text-base md:text-sm text-primary-text">
                     {new Date(date + 'T00:00:00').toLocaleDateString('en-US', {
                       weekday: 'long',
                       month: 'long',
@@ -156,7 +156,7 @@ const History = () => {
                     className="flex justify-end items-center gap-1.5"
                     title={`${dailyTotal} units`}
                   >
-                    {dailyVisuals.slice(0, 10).map((vis, index) => (
+                    {dailyVisuals.slice(0, 8).map((vis, index) => (
                       <div
                         key={index}
                         className="w-3.5 h-3.5 rounded-sm"
@@ -164,10 +164,9 @@ const History = () => {
                         title={vis.label}
                       />
                     ))}
-                    {dailyVisuals.length > 10 && (
+                    {dailyVisuals.length > 8 && (
                       <span className="text-xs text-secondary-text ml-1">
-                        {' '}
-                        +{dailyVisuals.length - 10} more{' '}
+                        +{dailyVisuals.length - 8}
                       </span>
                     )}
                   </div>
@@ -184,32 +183,32 @@ const History = () => {
                       exit={{ opacity: 0, height: 0, marginTop: 0 }}
                       className="overflow-hidden"
                     >
-                      <div className="pl-4 border-l-2 border-border-default flex flex-col gap-2">
+                      <div className="pl-4 border-l-2 border-border-default flex flex-col gap-2.5 pb-2">
                         {Object.entries(dailyData).map(([catId, count]) => {
                           const category = categoryMap.get(catId);
                           return category ? (
                             <div
                               key={catId}
-                              className="flex items-center gap-2 text-sm"
+                              className="flex items-center gap-2 text-sm text-primary-text"
                             >
                               <div
                                 className="w-2.5 h-2.5 rounded-full"
                                 style={{ backgroundColor: category.color }}
                               ></div>
                               <span>
-                                {' '}
-                                {category.label}: <strong>{count}</strong> units{' '}
+                                {category.label}: <strong>{count}</strong> units
                               </span>
                             </div>
                           ) : null;
                         })}
-                        <button
+                        <motion.button
                           onClick={() => handleEditClick(date)}
-                          className="flex items-center gap-2 text-xs text-secondary-text hover:text-accent transition-colors mt-2 self-start"
+                          className="flex items-center justify-center gap-2 px-4 py-2.5 md:px-3 md:py-1.5 text-xs text-secondary-text hover:text-accent hover:bg-white/5 rounded-md border border-white/10 transition-all mt-3 self-start min-h-[44px] md:min-h-0 cursor-pointer"
+                          whileTap={{ scale: 0.95 }}
                         >
                           <Edit size={12} />
                           <span>Alter History</span>
-                        </button>
+                        </motion.button>
                       </div>
                     </motion.div>
                   )}

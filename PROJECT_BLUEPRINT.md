@@ -8,29 +8,37 @@ Momentum is a productivity web application built with React, Tailwind CSS, and F
 
 - **App.jsx**
   - **UserProvider** (Provides user settings, profile metadata, logs, and Supabase client bindings)
-  - **TourContext / TourProvider** (Orchestrates the interactive user onboarding welcome tour)
-  - **Dashboard.jsx** (Central state driver for routines, logs, and layout routing)
-    - **Header.jsx** (Main top bar)
+  - **TourContext / TourProvider** (Orchestrates the interactive welcome tour)
+  - **Dashboard.jsx** (Central layout engine and state router)
+    - **Header.jsx** (Main header layout)
     - **BottomNav.jsx** (Sticky bottom navigation bar - *mobile-only*)
     - Desktop Layout (>=768px):
-      - **DailyTracker.jsx** (Mission metrics)
+      - **DailyTracker.jsx** (Logging tracker)
       - **ActivityChart.jsx** (Productivity bar chart)
-      - **CategoryManager.jsx** (Area focus configurations)
-      - **TodaysRoutinesCard.jsx** (Routines checklist)
-      - **FocusSession.jsx** (Focus timer)
-      - **StatsOverview.jsx** (Overall statistics summaries)
-      - **History.jsx** (Historical routines log)
+      - **CategoryManager.jsx** (Focus area setup configurations)
+      - **TodaysRoutinesCard.jsx** (Checklist tracker)
+      - **FocusSession.jsx** (Timer controls)
+      - **StatsOverview.jsx** (Tally metrics)
+      - **History.jsx** (Logbook list)
     - Mobile Layout (<768px):
-      - *Home Tab*: DailyTracker, TodaysRoutinesCard
-      - *Timer Tab*: FocusSession
-      - *Stats Tab*: ActivityChart, StatsOverview, History
-      - *Settings Tab*: CategoryManager
+      - *Home Tab*: DailyTracker (horizontal swipe), TodaysRoutinesCard (compact, scroll-contained)
+      - *Timer Tab*: FocusSession (zero scroll flex-centered)
+      - *Stats Tab* (Segmented Toggle Controls):
+        - Option `"Overview & Chart"`: ActivityChart, StatsOverview
+        - Option `"Logbook"`: History
+      - *Settings Tab*: CategoryManager (compact categories table)
 
 ---
 
-## Architectural Modifications (Version 1.1.0)
+## Architectural Modifications (Version 1.2.0)
 
-### Mobile Optimization Integration
-1. **Dynamic Viewport Routing:** Dashboard conditionally swaps between full grid presentation and single-tab animated viewports based on a CSS matchMedia check.
-2. **Liquid Glass styling:** Integrated responsive glassmorphism styles on overlay, navs, and setup panels utilizing backdrop filters (`backdrop-blur-xl bg-gray-900/60 border border-white/10`).
-3. **Viewport Bounds Preservation:** Implemented scrolling overflow panels on setups and interactive modals to guarantee usability on narrow viewports.
+### 1. Zero Scroll Architecture (Mobile-first)
+- Swapped viewport layouts on mobile to lock the root container size (`h-[100dvh] overflow-hidden`) and scroll content inner-containers independently.
+- Introduced custom `.hide-scrollbar` styling layer globally inside `index.css`.
+
+### 2. Segmented Mobile Sub-Navigation
+- Inlined toggle views inside `Dashboard.jsx`'s stats tab to prevent vertical stacked overflows.
+
+### 3. Responsive Color Picker Bottom Sheet
+- Re-architected `ColorPicker.jsx` using `matchMedia` state tracking.
+- Renders custom sliding overlay backdrops and spring-animated panel drawers from the bottom edge on mobile, while preserving absolute tooltip placement on desktop.
